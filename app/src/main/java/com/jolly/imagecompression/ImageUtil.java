@@ -1,7 +1,7 @@
 package com.jolly.imagecompression;
 
 import android.graphics.*;
-import androidx.exifinterface.media.ExifInterface;
+import android.media.ExifInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
