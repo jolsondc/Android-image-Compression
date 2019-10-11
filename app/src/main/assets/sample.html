@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<style>
+    div.division {
+        width: 50%;
+        height: 100%;
+        float: left;
+        padding-top: 100px;
+    }
+
+    #secondDivistion {
+        width: 30%;
+        height: 100%;
+        float: left;
+    }
+
+    #firstDivistion {
+        width: 70%;
+        height: 100%;
+        float: left;
+    }
+
+    th,td {
+        border-bottom: 1px solid #ddd;
+    }
+</style>
+
+<head>
+
+<body>
+    <meta charset="utf-8">
+    <HR size="40" id="div1">
+
+    <div id="firstDivistion">
+        <img id="imageId" style="width:150px;height:150px;">
+        <p><b>To Mr. Leno</b></p>
+        <span style="white-space: pre-line;color:#5c5c5c">Building name,
+            Street name, state,
+            country -100200</span>
+    </div>
+    <div id="secondDivistion" >
+
+        <p><b>The ABC</b></p>
+        <span style="white-space: pre-line;color:#5c5c5c">Building name,
+            Street name, state,
+            country -100200</span>
+    </div>
+   
+    <table style="width:100%;padding-top: 50px;"  cellpadding="0" cellspacing="0">
+        <tr>
+            <th>Sr.no</th>
+            <th>Quantity</th>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+        <tbody id="tbody"></tbody>
+
+
+    </table>
+    <div class="division" >
+        <p><b>The Invoice From</b></p>
+        <span style="white-space: pre-line;color:#5c5c5c">Mr. Zack donald,
+            Sr Accountant, ABC
+            Branch-UK
+            country -100200</span>
+
+    </div>
+    <div class="division">
+        <span style="white-space: pre-line;color:#5c5c5c; padding-top: 100px;">This is a Confidential Document.</span>
+    </div>
+
+</body>
+<script>
+    var div1 = document.getElementById('div1');
+    function loadInvoice() {
+        document.getElementById("imageId").innerHTML = invoice.getImagePath()
+        //document.getElementById("textId").innerHTML = invoice.getTextStr()
+
+        var _img = document.getElementById('imageId');
+        var newImg = new Image;
+        newImg.onload = function () {
+            _img.src = this.src;
+        }
+        newImg.src = invoice.getImagePath();
+        changeColor()
+    }
+
+    function changeColor() {
+
+        div1.style.backgroundColor = invoice.getColor();
+
+    }
+
+    function callListJS() {
+        var tbody = document.getElementById('tbody');
+        var size = window.javatojs.getSize();
+        var allign = "center"
+        console.log(size);
+        for (var i = 0; i < size; i++) {
+            var tr = "<tr>";
+            tr += "<td >" + i + 1 + "</td>"
+                + "<td >" + window.javatojs.getPersonObject(i).getQuantity() + "</td>"
+                + "<td >" + window.javatojs.getPersonObject(i).getName() + "</td>"
+                + " <td >" + window.javatojs.getPersonObject(i).getPrice() + "</td></tr>";
+            tbody.innerHTML += tr;
+        }
+        var totalTr = "<tr><td>Total</td><td></td><td></td><td align=" + allign + ">" + invoice.getTotal() + " </td> </tr>"
+        tbody.innerHTML += totalTr;
+    }
+
+
+
+</script>
+
+</head>
+
+</html>

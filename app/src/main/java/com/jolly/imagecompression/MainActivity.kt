@@ -10,6 +10,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var tx_size:TextView? = null
     private var tx_path:TextView? = null
     private var imageView :ImageView?= null
+    private var button:Button?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +41,19 @@ class MainActivity : AppCompatActivity() {
         tx_path = findViewById(R.id.tx_path)
         tx_size = findViewById(R.id.tx_size)
         imageView= findViewById(R.id.imageView)
-        fab.setOnClickListener {
-            showImagePickerOptions(this@MainActivity)
-        }
+        button=findViewById(R.id.button)
+    }
+
+    fun onPrintClick(view: View){
+
+        val intent = Intent(this, PrintScreen::class.java)
+        intent.putExtra("path", actualImage.toString())
+        startActivity(intent)
+    }
+
+    fun onImageClick(view: View){
+        showImagePickerOptions(this@MainActivity)
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -72,9 +85,9 @@ class MainActivity : AppCompatActivity() {
     private fun compressImageAndSave() {
         if(actualImage!=null){
             compressedImage = Compressor(this)
-                .setMaxWidth(640f)
-                .setMaxHeight(480f)
-                .setQuality(75)
+                .setMaxWidth(200f)
+                .setMaxHeight(200f)
+                .setQuality(50)
                 .setCompressFormat(Bitmap.CompressFormat.WEBP)
                 .setDestinationDirectoryPath(
                     Environment.getExternalStoragePublicDirectory(
@@ -85,6 +98,8 @@ class MainActivity : AppCompatActivity() {
 
             setImageNow()
         }
+
+        compressedImage?.let { button!!.isEnabled=true }
     }
 
     private fun setImageNow() {
@@ -111,7 +126,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun showImagePickerOptions(context: Context) {
+    private fun showImagePickerOptions(context: Context) {
         // setup the alert builder
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Select option")
@@ -119,7 +134,7 @@ class MainActivity : AppCompatActivity() {
         // add a list
         val optionList = arrayOf("Select for camera","Select from gallery"
         )
-        builder.setItems(optionList) { dialog, which ->
+        builder.setItems(optionList) { _, which ->
             when (which) {
                 0,1 -> onAction(which)
             }

@@ -1,0 +1,70 @@
+package com.jolly.imagecompression.html2pdf;
+
+import android.content.Context
+import android.print.PdfConverter
+import android.print.PdfConverter.Companion.OnComplete
+import android.webkit.WebView
+import java.io.File
+
+class Html2Pdf private constructor(
+    private val context: Context,
+    private val html: WebView,
+    private val file: File) {
+
+    fun convertToPdf(onCompleteConversion: OnCompleteConversion) {
+        PdfConverter.instance.convert(context, html, file, object : OnComplete {
+            override fun onWriteComplete() {
+                onCompleteConversion.onSuccess()
+            }
+
+            override fun onWriteFailed() {
+                onCompleteConversion.onFailed()
+            }
+
+        })
+    }
+
+    fun convertToPdf() {
+        PdfConverter.instance.convert(context, html, file, null)
+    }
+
+    interface OnCompleteConversion {
+
+        fun onSuccess()
+
+        fun onFailed()
+
+    }
+
+    companion object {
+
+        class Builder {
+
+            private lateinit var context: Context
+            private lateinit var html: WebView
+            private lateinit var file: File
+
+            fun context(context: Context): Builder {
+                this.context = context
+                return this
+            }
+
+            fun html(html: WebView): Builder {
+                this.html = html
+                return this
+            }
+
+            fun file(file: File): Builder {
+                this.file = file
+                return this
+            }
+
+            fun build(): Html2Pdf {
+                return Html2Pdf(context, html, file)
+            }
+
+        }
+
+    }
+
+}

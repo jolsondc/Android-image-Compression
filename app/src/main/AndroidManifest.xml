@@ -23,10 +23,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".PrintScreen"/>
+
         <!-- cache directory file provider paths -->
         <provider
                 android:name="androidx.core.content.FileProvider"
-                android:authorities="${applicationId}.provider"
+                android:authorities="com.jolly.imagecompression"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
