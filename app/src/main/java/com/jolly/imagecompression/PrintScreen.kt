@@ -11,8 +11,8 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.jolly.imagecompression.html2pdf.Html2Pdf
-import com.jolly.imagecompression.models.ContentData
 import com.jolly.imagecompression.models.InvoiceModel
+import com.jolly.imagecompression.models.InvoiceModel.ContentData
 import kotlinx.android.synthetic.main.print_layout.*
 import java.io.File
 
@@ -22,9 +22,8 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
     private var pdfFile: File? = null
     var imagePathStr: String? = null
     private val quant = 20
-    private val list = ArrayList<ContentData>()
     private var invoiceModel: InvoiceModel? = null
-    private val randomColors = arrayOf("#FF0000", "#008000", "#0000FF")
+    private val randomColors = arrayOf( "#008577","#D81B60", "#303F9F")
 
     var webview: WebView? = null
     @SuppressLint("JavascriptInterface")
@@ -40,7 +39,6 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
         imagePathStr = "file://" + file.absolutePath
 
         webview!!.settings.builtInZoomControls = true
-        getItemData()
         val ws = webview!!.settings
         ws.javaScriptEnabled = true
         ws.useWideViewPort = true//Adaptive resolution
@@ -49,6 +47,7 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
         //webview!!.loadDataWithBaseURL("", htmlJs, "text/html", "UTF-8", null)
         webview!!.loadUrl("file:///android_asset/sample.html")
         invoiceModel = getInvoiceData()
+        getItemData()
         webview!!.addJavascriptInterface(invoiceModel!!, "invoice")
         webview!!.addJavascriptInterface(this, "javatojs")
 
@@ -81,24 +80,35 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
     }
 
     private fun getItemData() {
+        val list = ArrayList<ContentData>()
         for (i in 1..20) {
-            val p = ContentData()
-            p.name = "loonggg"
-            p.quantity = "28"
-            p.price = "$ 100"
-            list.add(p)
+            val contentData = InvoiceModel().ContentData("loonggg","28","$ 100")
+            list.add(contentData)
         }
+        invoiceModel!!.list= list
+    }
+
+    fun changeToGreen(view: View) {
+        changColors(0)
+    }
+
+    fun changeToRed(view:View){
+        changColors(1)
+    }
+
+    fun changeToBlue(view: View){
+        changColors(2)
     }
 
     @SuppressLint("JavascriptInterface")
-    fun changeColor(view: View) {
+    fun changColors(index :Int){
         invoiceModel?.apply {
-            color = randomColors[(Math.random() * randomColors.size).toInt()]
+            color = randomColors[index]
         }
         webview!!.addJavascriptInterface(invoiceModel, "invoice")
         webview!!.loadUrl("javascript:changeColor()")
-
     }
+
 
     private fun createPDF() {
         //Impl example
@@ -146,12 +156,12 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
      */
     @JavascriptInterface
     fun getPersonObject(index: Int): ContentData {
-        return list[index]
+        return invoiceModel!!.list[index]
     }
 
     @JavascriptInterface
     fun getSize(): Int {
-        return list.size
+        return invoiceModel!!.list.size
     }
 
 
