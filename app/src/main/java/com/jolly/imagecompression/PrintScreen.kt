@@ -10,7 +10,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import com.jolly.imagecompression.html2pdf.Html2Pdf
 import com.jolly.imagecompression.models.InvoiceModel
 import com.jolly.imagecompression.models.InvoiceModel.ContentData
 import kotlinx.android.synthetic.main.print_layout.*
@@ -112,7 +111,7 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
 
     private fun createPDF() {
         //Impl example
-        val converter = Html2Pdf.Companion.Builder()
+        val converter = Html2Pdf.Builder()
             .context(this)
             .html(webview!!)
             .file(pdfFile!!)
