@@ -43,8 +43,8 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
         ws.useWideViewPort = true//Adaptive resolution
         ws.loadWithOverviewMode = true
 
-        //webview!!.loadDataWithBaseURL("", htmlJs, "text/html", "UTF-8", null)
-        webview!!.loadUrl("file:///android_asset/sample.html")
+        webview!!.loadDataWithBaseURL("", html+script, "text/html", "UTF-8", null)
+        //webview!!.loadUrl("file:///android_asset/sample.html")
         invoiceModel = getInvoiceData()
         getItemData()
         webview!!.addJavascriptInterface(invoiceModel!!, "invoice")
@@ -171,4 +171,123 @@ class PrintScreen : AppCompatActivity(), Html2Pdf.OnCompleteConversion {
             //   Log.i("TAG","Html str :$htmlJs");
         }
     }
+
+    val html="<!DOCTYPE html>\n" +
+            "<html>\n" +
+            "<style>\n" +
+            "    div.division {\n" +
+            "        width: 50%;\n" +
+            "        height: 100%;\n" +
+            "        float: left;\n" +
+            "        padding-top: 100px;\n" +
+            "    }\n" +
+            "\n" +
+            "    #secondDivistion {\n" +
+            "        width: 30%;\n" +
+            "        height: 100%;\n" +
+            "        float: left;\n" +
+            "    }\n" +
+            "\n" +
+            "    #firstDivistion {\n" +
+            "        width: 70%;\n" +
+            "        height: 100%;\n" +
+            "        float: left;\n" +
+            "    }\n" +
+            "\n" +
+            "    th,td {\n" +
+            "        border-bottom: 1px solid #ddd;\n" +
+            "    }\n" +
+            "</style>\n" +
+            "\n" +
+            "<head>\n" +
+            "\n" +
+            "<body>\n" +
+            "    <meta charset=\"utf-8\">\n" +
+            "    <HR size=\"40\" id=\"div1\">\n" +
+            "        <div id=\"firstDivistion\" >\n" +
+            "\n" +
+            "            <p><b>The ABC</b></p>\n" +
+            "            <span style=\"white-space: pre-line;color:#5c5c5c\">Building name,\n" +
+            "                Street name, state,\n" +
+            "                country -100200</span>\n" +
+            "        </div>\n" +
+            "    <div id=\"secondDivistion\">\n" +
+            "        <img id=\"imageId\" style=\"width:150px;height:150px;\">\n" +
+            "        <p><b>To Mr. Leno</b></p>\n" +
+            "        <span style=\"white-space: pre-line;color:#5c5c5c\">Building name,\n" +
+            "            Street name, state,\n" +
+            "            country -100200</span>\n" +
+            "    </div>\n" +
+            "    \n" +
+            "   \n" +
+            "    <table style=\"width:100%;padding-top: 50px;\"  cellpadding=\"0\" cellspacing=\"20\">\n" +
+            "        <tr>\n" +
+            "            <th>Sr.no</th>\n" +
+            "            <th>Quantity</th>\n" +
+            "            <th>Name</th>\n" +
+            "            <th>Price</th>\n" +
+            "        </tr>\n" +
+            "        <tbody id=\"tbody\"></tbody>\n" +
+            "\n" +
+            "\n" +
+            "    </table>\n" +
+            "    <div class=\"division\" >\n" +
+            "        <p><b>The Invoice From</b></p>\n" +
+            "        <span style=\"white-space: pre-line;color:#5c5c5c\">Mr. Zack donald,\n" +
+            "            Sr Accountant, ABC\n" +
+            "            Branch-UK\n" +
+            "            country -100200</span>\n" +
+            "\n" +
+            "    </div>\n" +
+            "    <div class=\"division\">\n" +
+            "        <span style=\"white-space: pre-line;color:#5c5c5c; padding-top: 100px;\">This is a Confidential Document.</span>\n" +
+            "    </div>\n" +
+            "\n" +
+            "</body>"
+
+    val script ="<script>\n" +
+            "    var div1 = document.getElementById('div1');\n" +
+            "    function loadInvoice() {\n" +
+            "        document.getElementById(\"imageId\").innerHTML = invoice.getImagePath()\n" +
+            "        //document.getElementById(\"textId\").innerHTML = invoice.getTextStr()\n" +
+            "\n" +
+            "        var _img = document.getElementById('imageId');\n" +
+            "        var newImg = new Image;\n" +
+            "        newImg.onload = function () {\n" +
+            "            _img.src = this.src;\n" +
+            "        }\n" +
+            "        newImg.src = invoice.getImagePath();\n" +
+            "        changeColor()\n" +
+            "    }\n" +
+            "\n" +
+            "    function changeColor() {\n" +
+            "\n" +
+            "        div1.style.backgroundColor = invoice.getColor();\n" +
+            "\n" +
+            "    }\n" +
+            "\n" +
+            "    function callListJS() {\n" +
+            "        var tbody = document.getElementById('tbody');\n" +
+            "        var size = window.javatojs.getSize();\n" +
+            "        var allign = \"center\"\n" +
+            "        console.log(size);\n" +
+            "        for (var i = 0; i < size; i++) {\n" +
+            "            var tr = \"<tr>\";\n" +
+            "            tr += \"<td >\" + i + \"</td>\"\n" +
+            "                + \"<td >\" + window.javatojs.getPersonObject(i).getQuantity() + \"</td>\"\n" +
+            "                + \"<td >\" + window.javatojs.getPersonObject(i).getName() + \"</td>\"\n" +
+            "                + \" <td >\" + window.javatojs.getPersonObject(i).getPrice() + \"</td></tr>\";\n" +
+            "            tbody.innerHTML += tr;\n" +
+            "        }\n" +
+            "        var totalTr = \"<tr><td>Total</td><td></td><td></td><td align=\" + allign + \">\" + invoice.getTotal() + \" </td> </tr>\"\n" +
+            "        tbody.innerHTML += totalTr;\n" +
+            "    }\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "</script>\n" +
+            "\n" +
+            "</head>\n" +
+            "\n" +
+            "</html>"
 }
